@@ -223,7 +223,7 @@ export default function StockChart({ stock }: StockChartProps) {
       result.push({
         time: dates[effIdx] as Time,
         position: "aboveBar",
-        color: "#ef4444",
+        color: "#06b6d4",
         shape: "arrowDown",
         text: `${t("markerEffective")} ${formatDate(stock.effectiveDate, dateLocale)}`,
       });
@@ -482,8 +482,8 @@ export default function StockChart({ stock }: StockChartProps) {
           <span>{t("legendAnnouncement")}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-0.5 bg-red-500" />
-          <span className="w-1 h-1 rounded-full bg-red-500" />
+          <span className="inline-block w-3 h-0.5 bg-cyan-500" />
+          <span className="w-1 h-1 rounded-full bg-cyan-500" />
           <span>{t("legendEffective")}</span>
         </div>
         {stock.removalDate && (

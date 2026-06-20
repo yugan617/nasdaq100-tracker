@@ -58,7 +58,7 @@ export default function StockHeader({ stock }: StockHeaderProps) {
         </div>
         <div>
           <span className="text-gray-500">{t("effective")} </span>
-          <span className="text-red-400 font-medium">
+          <span className="text-cyan-400 font-medium">
             {formatDate(stock.effectiveDate, dateLocale)}
           </span>
         </div>
