@@ -31,6 +31,9 @@ Interactive visualization of stocks added to the Nasdaq-100 index, featuring can
 - **No API Key Required** — Uses Yahoo Finance via `yahoo-finance2` package server-side
 - **无需API密钥** — 服务端使用 `yahoo-finance2` 获取Yahoo Finance数据
 
+- **Knowledge Bank** — Concise bilingual guides to index inclusion, removal, and event-study methods
+- **知识库** — 用简短的中英双语内容介绍指数纳入、剔除与事件量化方法
+
 ---
 
 ## Quick Start / 快速开始
@@ -134,6 +137,7 @@ src/
     RangeSelector.tsx      # Time range buttons / 时间范围按钮
     WarningTooltip.tsx     # Warning icon + tooltip / 警告图标和提示
     LanguageToggle.tsx     # EN/中文 switch / 语言切换
+    KnowledgeBank.tsx      # Index rules + research guides / 指数规则与研究指南
   data/
     nasdaq100Additions.ts  # All stocks with verified data / 全部股票数据
   lib/

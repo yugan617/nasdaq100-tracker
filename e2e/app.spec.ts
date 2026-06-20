@@ -99,4 +99,48 @@ test.describe("Nasdaq-100 Tracker", () => {
     const href = await link.getAttribute("href");
     expect(href).toContain("nasdaq.com");
   });
+
+  test("should open the knowledge bank and switch articles", async ({ page }) => {
+    await page.goto("/");
+    await page.getByTestId("knowledge-bank-button").click();
+    await expect(page.getByTestId("knowledge-bank")).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        name: "What does it take to enter the Nasdaq-100?",
+      })
+    ).toBeVisible();
+
+    await page.getByRole("tab", { name: "How to quantify it" }).click();
+    await expect(
+      page.getByRole("heading", {
+        name: "Can index inclusion be quantified?",
+      })
+    ).toBeVisible();
+  });
+
+  test("should localize the knowledge bank in Chinese", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Toggle language" }).click();
+    await page.getByTestId("knowledge-bank-button").click();
+
+    await expect(
+      page.getByRole("heading", { name: "进入纳斯达克100，需要满足什么？" })
+    ).toBeVisible();
+    await page.getByRole("tab", { name: "如何量化" }).click();
+    await expect(
+      page.getByRole("heading", { name: "“纳入效应”能不能被量化？" })
+    ).toBeVisible();
+  });
+
+  test("should open the knowledge bank on mobile", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Toggle ticker list" }).click();
+    await page.getByTestId("knowledge-bank-button").click();
+
+    await expect(page.getByTestId("knowledge-bank")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Knowledge Bank" })
+    ).toBeVisible();
+  });
 });

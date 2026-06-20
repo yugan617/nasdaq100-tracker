@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Nasdaq-100 Additions Tracker",
-  description: "Track stocks added to the Nasdaq-100 index over the past 3 years with interactive price charts and key event dates.",
+  description:
+    "Explore companies newly added to the Nasdaq-100 with interactive charts, event dates, and a bilingual index knowledge bank.",
 };
 
 export default function RootLayout({

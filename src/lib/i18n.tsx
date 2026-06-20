@@ -50,11 +50,11 @@ const translations: Record<string, Record<Locale, string>> = {
   // Site & header
   siteTitle: {
     en: "Nasdaq-100 Additions Tracker",
-    zh: "纳斯达克100成分股追踪",
+    zh: "纳斯达克100新增公司追踪",
   },
   headerTitle: {
-    en: "Nasdaq-100 Tracker",
-    zh: "纳斯达克100追踪",
+    en: "Nasdaq-100 Additions",
+    zh: "纳斯达克100新增追踪",
   },
 
   // Page - empty state

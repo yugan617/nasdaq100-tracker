@@ -8,6 +8,7 @@ import nasdaq100Additions, {
 import { formatDate } from "@/lib/dateRange";
 import { useT, useLocale } from "@/lib/i18n";
 import LanguageToggle from "./LanguageToggle";
+import KnowledgeBank from "./KnowledgeBank";
 
 interface TickerListProps {
   selectedTicker: string | null;
@@ -24,6 +25,7 @@ export default function TickerList({
 }: TickerListProps) {
   const [search, setSearch] = useState("");
   const [yearFilter, setYearFilter] = useState<number | null>(null);
+  const [knowledgeBankOpen, setKnowledgeBankOpen] = useState(false);
   const t = useT();
   const { locale } = useLocale();
 
@@ -61,7 +63,7 @@ export default function TickerList({
 
   return (
     <aside
-      className={`bg-gray-950 border-r border-gray-800 flex flex-col transition-all ${
+      className={`h-full min-h-0 bg-gray-950 border-r border-gray-800 flex flex-col transition-all ${
         collapsed ? "w-0 overflow-hidden" : "w-full md:w-72 lg:w-80"
       }`}
       data-testid="ticker-list"
@@ -131,7 +133,7 @@ export default function TickerList({
       </div>
 
       {/* Ticker list */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {filtered.map((stock) => (
           <TickerItem
             key={stock.ticker + stock.effectiveDate}
@@ -148,6 +150,45 @@ export default function TickerList({
           </div>
         )}
       </div>
+
+      <div className="border-t border-gray-800 p-3">
+        <button
+          onClick={() => setKnowledgeBankOpen(true)}
+          className="group flex w-full items-center gap-3 rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2.5 text-left transition-colors hover:border-cyan-800 hover:bg-gray-900"
+          data-testid="knowledge-bank-button"
+        >
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-cyan-500/10 text-cyan-400">
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.8}
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"
+              />
+            </svg>
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-medium text-gray-300 group-hover:text-white">
+              {locale === "zh" ? "知识库" : "Knowledge Bank"}
+            </span>
+            <span className="block truncate text-xs text-gray-600">
+              {locale === "zh"
+                ? "纳入、剔除与量化方法"
+                : "Inclusion, removal & research"}
+            </span>
+          </span>
+          <span className="text-gray-600 group-hover:text-cyan-400">→</span>
+        </button>
+      </div>
+
+      {knowledgeBankOpen && (
+        <KnowledgeBank onClose={() => setKnowledgeBankOpen(false)} />
+      )}
     </aside>
   );
 }
