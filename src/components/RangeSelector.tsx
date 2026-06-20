@@ -1,6 +1,7 @@
 "use client";
 
 import { RangeKey } from "@/lib/dateRange";
+import { useT } from "@/lib/i18n";
 
 interface RangeSelectorProps {
   activeRange: RangeKey;
@@ -8,13 +9,13 @@ interface RangeSelectorProps {
   hasEventWindow: boolean;
 }
 
-const ranges: { key: RangeKey; label: string }[] = [
-  { key: "3m", label: "3M" },
-  { key: "6m", label: "6M" },
-  { key: "1y", label: "1Y" },
-  { key: "2y", label: "2Y" },
-  { key: "3y", label: "3Y" },
-  { key: "all", label: "All" },
+const rangeKeys: { key: RangeKey; labelKey: string }[] = [
+  { key: "3m", labelKey: "range3M" },
+  { key: "6m", labelKey: "range6M" },
+  { key: "1y", labelKey: "range1Y" },
+  { key: "2y", labelKey: "range2Y" },
+  { key: "3y", labelKey: "range3Y" },
+  { key: "all", labelKey: "rangeAll" },
 ];
 
 export default function RangeSelector({
@@ -22,9 +23,11 @@ export default function RangeSelector({
   onRangeChange,
   hasEventWindow,
 }: RangeSelectorProps) {
+  const t = useT();
+
   return (
     <div className="flex items-center gap-1 overflow-x-auto px-1 py-1 no-scrollbar" data-testid="range-selector">
-      {ranges.map(({ key, label }) => (
+      {rangeKeys.map(({ key, labelKey }) => (
         <button
           key={key}
           onClick={() => onRangeChange(key)}
@@ -34,7 +37,7 @@ export default function RangeSelector({
               : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200"
           }`}
         >
-          {label}
+          {t(labelKey)}
         </button>
       ))}
       {hasEventWindow && (
@@ -47,7 +50,7 @@ export default function RangeSelector({
           }`}
           data-testid="event-window-btn"
         >
-          Event Window
+          {t("eventWindow")}
         </button>
       )}
     </div>

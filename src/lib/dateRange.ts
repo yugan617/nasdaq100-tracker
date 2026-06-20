@@ -67,9 +67,9 @@ export function isDateInRange(date: string, range: DateRange): boolean {
   return d >= range.from && d <= range.to;
 }
 
-export function formatDate(dateStr: string): string {
+export function formatDate(dateStr: string, locale: string = "en-US"): string {
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",

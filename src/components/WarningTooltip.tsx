@@ -36,14 +36,14 @@ export default function WarningTooltip({ warning }: WarningTooltipProps) {
         &#9888;
       </button>
       {open && (
-        <div className="absolute z-50 left-1/2 -translate-x-1/2 top-full mt-2 w-72 sm:w-80 bg-gray-800 border border-gray-600 rounded-lg shadow-xl p-3 text-sm text-gray-200">
+        <div className="absolute z-50 left-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-gray-800 border border-gray-600 rounded-lg shadow-xl p-3 text-sm text-gray-200">
           <div className="font-semibold text-amber-400 mb-1">
             {warning.title}
           </div>
           <div className="text-gray-300 leading-relaxed">
             {warning.description}
           </div>
-          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 border-l border-t border-gray-600 rotate-45" />
+          <div className="absolute -top-1.5 left-3 w-3 h-3 bg-gray-800 border-l border-t border-gray-600 rotate-45" />
         </div>
       )}
     </div>

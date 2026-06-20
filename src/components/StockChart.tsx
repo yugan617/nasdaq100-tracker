@@ -30,6 +30,7 @@ import {
   formatDate,
   DateRange,
 } from "@/lib/dateRange";
+import { useT, useLocale } from "@/lib/i18n";
 import RangeSelector from "./RangeSelector";
 
 interface StockChartProps {
@@ -70,6 +71,7 @@ function getOutOfRangeMessage(
   effectiveDate: string,
   visibleFrom: string,
   visibleTo: string,
+  t: (key: string) => string,
   removalDate?: string
 ): string | null {
   const vis = getEventVisibility(
@@ -85,25 +87,25 @@ function getOutOfRangeMessage(
   const to = new Date(visibleTo);
 
   const missing: string[] = [];
-  if (!vis.announcementVisible) missing.push("announcement");
-  if (!vis.effectiveVisible) missing.push("effective date");
-  if (removalDate && !vis.removalVisible) missing.push("removal date");
+  if (!vis.announcementVisible) missing.push(t("announcement"));
+  if (!vis.effectiveVisible) missing.push(t("effectiveDate"));
+  if (removalDate && !vis.removalVisible) missing.push(t("removalDate"));
 
   if (vis.noneVisible) {
     const effDate = new Date(effectiveDate);
     const annDate = new Date(announcementDate);
     if (effDate < from) {
-      return "\u2190 Nasdaq-100 events occurred before the current chart range";
+      return t("eventsBeforeRange");
     }
     if (annDate > to) {
-      return "Nasdaq-100 events occur after the current chart range \u2192";
+      return t("eventsAfterRange");
     }
-    return "\u2190 Events are outside the current chart range";
+    return t("eventsOutsideRange");
   }
 
   // Some events visible, some not
-  const label = missing.join(" and ");
-  return `\u2190 Nasdaq-100 ${label} outside the current chart range`;
+  const label = missing.join(" & ");
+  return `${t("outsideRangePrefix")} ${label} ${t("outsideRangeSuffix")}`;
 }
 
 export default function StockChart({ stock }: StockChartProps) {
@@ -117,11 +119,19 @@ export default function StockChart({ stock }: StockChartProps) {
   const [activeRange, setActiveRange] = useState<RangeKey>("2y");
   const [outOfRangeMsg, setOutOfRangeMsg] = useState<string | null>(null);
   const stockRef = useRef(stock);
+  const t = useT();
+  const { locale } = useLocale();
+  const tRef = useRef(t);
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
-  // Keep stockRef in sync
+  // Keep refs in sync
   useEffect(() => {
     stockRef.current = stock;
   }, [stock]);
+
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
 
   // Fetch data
   useEffect(() => {
@@ -202,7 +212,7 @@ export default function StockChart({ stock }: StockChartProps) {
         position: "aboveBar",
         color: "#f97316",
         shape: "arrowDown",
-        text: `Announced: ${formatDate(stock.announcementDate)}`,
+        text: `${t("markerAnnounced")} ${formatDate(stock.announcementDate, dateLocale)}`,
       });
     }
 
@@ -215,7 +225,7 @@ export default function StockChart({ stock }: StockChartProps) {
         position: "aboveBar",
         color: "#ef4444",
         shape: "arrowDown",
-        text: `Effective: ${formatDate(stock.effectiveDate)}`,
+        text: `${t("markerEffective")} ${formatDate(stock.effectiveDate, dateLocale)}`,
       });
     }
 
@@ -228,7 +238,7 @@ export default function StockChart({ stock }: StockChartProps) {
           position: "aboveBar",
           color: "#a78bfa",
           shape: "arrowDown",
-          text: `Removed: ${formatDate(stock.removalDate)}`,
+          text: `${t("markerRemoved")} ${formatDate(stock.removalDate, dateLocale)}`,
         });
       }
     }
@@ -236,7 +246,7 @@ export default function StockChart({ stock }: StockChartProps) {
     return result.sort((a, b) =>
       (a.time as string).localeCompare(b.time as string)
     );
-  }, [rawData, stock.announcementDate, stock.effectiveDate, stock.removalDate]);
+  }, [rawData, stock.announcementDate, stock.effectiveDate, stock.removalDate, t, dateLocale]);
 
   // Apply time range
   const applyRange = useCallback(
@@ -295,6 +305,7 @@ export default function StockChart({ stock }: StockChartProps) {
       stockRef.current.effectiveDate,
       visibleFrom,
       visibleTo,
+      tRef.current,
       stockRef.current.removalDate
     );
     setOutOfRangeMsg(msg);
@@ -411,7 +422,7 @@ export default function StockChart({ stock }: StockChartProps) {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          Loading {stock.chartSymbol} data...
+          {t("loadingData")} {stock.chartSymbol} {t("dataEllipsis")}
         </div>
       </div>
     );
@@ -421,7 +432,7 @@ export default function StockChart({ stock }: StockChartProps) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-900 min-h-[400px]">
         <div className="text-center p-4">
-          <div className="text-red-400 text-lg mb-2">Failed to load data</div>
+          <div className="text-red-400 text-lg mb-2">{t("failedToLoadData")}</div>
           <div className="text-gray-500 text-sm">{error}</div>
         </div>
       </div>
@@ -451,7 +462,7 @@ export default function StockChart({ stock }: StockChartProps) {
             className="text-blue-400 hover:text-blue-300 underline underline-offset-2 whitespace-nowrap cursor-pointer"
             data-testid="jump-to-event-btn"
           >
-            View event window
+            {t("viewEventWindow")}
           </button>
         </div>
       )}
@@ -468,22 +479,22 @@ export default function StockChart({ stock }: StockChartProps) {
         <div className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-0.5 bg-orange-500" />
           <span className="w-1 h-1 rounded-full bg-orange-500" />
-          <span>Announcement date</span>
+          <span>{t("legendAnnouncement")}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-0.5 bg-red-500" />
           <span className="w-1 h-1 rounded-full bg-red-500" />
-          <span>Effective date</span>
+          <span>{t("legendEffective")}</span>
         </div>
         {stock.removalDate && (
           <div className="flex items-center gap-1.5">
             <span className="inline-block w-3 h-0.5 bg-violet-400" />
             <span className="w-1 h-1 rounded-full bg-violet-400" />
-            <span>Removal date</span>
+            <span>{t("legendRemoval")}</span>
           </div>
         )}
         <div className="text-gray-600">
-          Adjusted prices (splits & dividends reflected)
+          {t("legendAdjusted")}
         </div>
       </div>
     </div>

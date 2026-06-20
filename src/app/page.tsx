@@ -7,6 +7,8 @@ import nasdaq100Additions, {
 import TickerList from "@/components/TickerList";
 import StockHeader from "@/components/StockHeader";
 import StockChart from "@/components/StockChart";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useT } from "@/lib/i18n";
 
 function getTickerFromHash(): string | null {
   if (typeof window === "undefined") return null;
@@ -21,6 +23,7 @@ export default function Home() {
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const t = useT();
 
   // Initialize from hash on mount
   useEffect(() => {
@@ -72,7 +75,7 @@ export default function Home() {
   if (!mounted) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-950">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t("loading")}</div>
       </div>
     );
   }
@@ -90,9 +93,12 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <span className="text-sm font-semibold text-gray-300">
-          Nasdaq-100 Tracker
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-gray-300">
+            {t("headerTitle")}
+          </span>
+          <LanguageToggle />
+        </div>
         <span className="text-sm text-gray-500 font-mono">
           {selectedTicker || ""}
         </span>
@@ -132,10 +138,9 @@ export default function Home() {
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center text-gray-500">
-              <p className="text-lg">Select a stock from the sidebar</p>
+              <p className="text-lg">{t("selectStock")}</p>
               <p className="text-sm mt-1">
-                {nasdaq100Additions.length} stocks added to Nasdaq-100 in the
-                past 3 years
+                {nasdaq100Additions.length} {t("stocksAddedCount")}
               </p>
             </div>
           </div>
